@@ -14,6 +14,6 @@ install: configure
 configure: config.mk
 
 config.mk: configure.mk
-	@$(MAKE) -s -f configure.mk > config.mk.tmp
+	@$(MAKE) -s -f configure.mk
 	@mv config.mk.tmp config.mk
 
