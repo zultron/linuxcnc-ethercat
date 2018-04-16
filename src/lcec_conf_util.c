@@ -21,6 +21,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <expat.h>
+#include <stdbool.h>
 
 #include "lcec_conf.h"
 #include "lcec_conf_priv.h"

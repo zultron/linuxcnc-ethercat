@@ -26,6 +26,8 @@
 #include "rtapi_string.h"
 #include "rtapi_math.h"
 
+#include <stdbool.h>
+
 #include "ecrt.h"
 #include "lcec_conf.h"
 
