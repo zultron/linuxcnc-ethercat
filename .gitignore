@@ -15,12 +15,15 @@
 **/modules.order
 config.mk
 src/lcec_conf
+src/lcec.exported
 src/Module.symvers
 
 # debian pkgbuild files
 debian/.debhelper/
+debian/debhelper-build-stamp
 debian/files
 debian/*.log
 debian/*.substvars
 debian/linuxcnc-ethercat/
-
+debian/linuxcnc-ethercat.debhelper.log
+debian/linuxcnc-ethercat.substvars
