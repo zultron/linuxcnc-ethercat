@@ -10,21 +10,23 @@ endif
 
 .PHONY: configure
 configure:
-	@echo "COMP = $(COMP)"
-	@echo "MODINC = $(MODINC)"
-	@echo "BUILDSYS = $(BUILDSYS)"
-	@echo "KERNELDIR = $(KERNELDIR)"
-	@echo "CC = $(CC)"
-	@echo "RTAI = $(RTAI)"
-	@echo "RTFLAGS = $(RTFLAGS)"
-	@echo "KERNELRELEASE = $(KERNELRELEASE)"
-	@echo "EXTRA_CFLAGS = $(EXTRA_CFLAGS)"
-	@echo "USE_RTLIBM = $(USE_RTLIBM)"
-	@echo "EMC2_HOME = $(EMC2_HOME)"
-	@echo "RUN_IN_PLACE = $(RUN_IN_PLACE)"
-	@echo "RTLIBDIR = $(RTLIBDIR)"
-	@echo "LIBDIR = $(LIBDIR)"
-	@echo "prefix = $(prefix)"
+	@ {\
+	    echo "COMP = $(COMP)"; \
+	    echo "MODINC = $(MODINC)"; \
+	    echo "BUILDSYS = $(BUILDSYS)"; \
+	    echo "KERNELDIR = $(KERNELDIR)"; \
+	    echo "CC = $(CC)"; \
+	    echo "RTAI = $(RTAI)"; \
+	    echo "RTFLAGS += $(RTFLAGS)"; \
+	    echo "KERNELRELEASE = $(KERNELRELEASE)"; \
+	    echo "EXTRA_CFLAGS += $(EXTRA_CFLAGS)"; \
+	    echo "USE_RTLIBM = $(USE_RTLIBM)"; \
+	    echo "EMC2_HOME = $(EMC2_HOME)"; \
+	    echo "RUN_IN_PLACE = $(RUN_IN_PLACE)"; \
+	    echo "RTLIBDIR = $(RTLIBDIR)"; \
+	    echo "LIBDIR = $(LIBDIR)"; \
+	    echo "prefix = $(prefix)"; \
+	} > config.mk.tmp
 
 # include modinc
 MODINC=$(shell $(COMP) --print-modinc)
