@@ -18,6 +18,11 @@ else
 
 LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
 
+module-dir:
+	test -d "$(DESTDIR)$(EMC2_RTLIB_DIR)" || \
+	    mkdir -p "$(DESTDIR)$(EMC2_RTLIB_DIR)"
+install:  module-dir
+
 all: modules
 
 endif
