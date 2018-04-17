@@ -12,5 +12,8 @@
 CFLAGS += -I/usr/include/ethercat
 export CFLAGS
 
+EXTRA_RTFLAGS += -I/usr/include/ethercat
+export EXTRA_RTFLAGS
+
 %:
 	dh $@ 
