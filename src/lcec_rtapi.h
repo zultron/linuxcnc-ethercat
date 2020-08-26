@@ -33,11 +33,7 @@
   #include "lcec_rtapi_user.h"
 #endif
 
-#if defined RTAPI_SERIAL && RTAPI_SERIAL >= 2
- #define lcec_rtapi_shmem_getptr(id, ptr) rtapi_shmem_getptr(id, ptr, NULL)
-#else
  #define lcec_rtapi_shmem_getptr(id, ptr) rtapi_shmem_getptr(id, ptr)
-#endif
 
 #endif
 
