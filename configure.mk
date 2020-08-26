@@ -21,7 +21,8 @@ configure:
 	    echo "KERNELRELEASE = $(KERNELRELEASE)"; \
 	    echo "EXTRA_CFLAGS += $(EXTRA_CFLAGS)"; \
 	    echo "USE_RTLIBM = $(USE_RTLIBM)"; \
-	    echo "EMC2_HOME = $(EMC2_HOME)"; \
+	    echo "BINDIR = $(BINDIR)"; \
+	    echo "DATAROOTDIR = $(DATAROOTDIR)"; \
 	    echo "RUN_IN_PLACE = $(RUN_IN_PLACE)"; \
 	    echo "RTLIBDIR = $(RTLIBDIR)"; \
 	    echo "LIBDIR = $(LIBDIR)"; \
@@ -36,3 +37,12 @@ endif
 
 include $(MODINC)
 
+ifneq (,$(HAL_HOME))
+$(info Configuring for Machinekit)
+BINDIR = $(HAL_HOME)/bin
+DATAROOTDIR = $(HAL_HOME)/share
+else
+$(info Configuring for LinuxCNC)
+BINDIR = $(EMC2_HOME)/bin
+DATAROOTDIR = $(EMC2_HOME)/share
+endif
