@@ -12,8 +12,8 @@ LCEC_CONF_OBJS = \
 all: lcec_conf
 
 install: lcec_conf
-	mkdir -p $(DESTDIR)$(EMC2_HOME)/bin
-	cp lcec_conf $(DESTDIR)$(EMC2_HOME)/bin/
+	mkdir -p $(DESTDIR)$(BINDIR)
+	cp lcec_conf $(DESTDIR)$(BINDIR)
 
 lcec_conf: $(LCEC_CONF_OBJS)
 	@echo Compiling $@
