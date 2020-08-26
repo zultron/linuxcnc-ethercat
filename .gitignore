@@ -24,3 +24,5 @@ src/Module.symvers
 /debian/linuxcnc-ethercat.debhelper.log
 /debian/linuxcnc-ethercat.substvars
 /debian/linuxcnc-ethercat/
+
+/.github/local-env.yaml

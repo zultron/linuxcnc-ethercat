@@ -3,7 +3,7 @@ Section: unknown
 Priority: extra
 Maintainer: Sascha Ittner <sascha.ittner@modusoft.de>
 Build-Depends: debhelper (>= 8.0.0),
-  linuxcnc-dev | linuxcnc-sim-dev | linuxcnc-uspace-dev | machinekit-rt-threads,
+  linuxcnc-dev | linuxcnc-sim-dev | linuxcnc-uspace-dev | machinekit-hal-dev,
   etherlabmaster-dev | igh-ethercat-dev, libexpat1-dev
 Standards-Version: 3.9.3
 
