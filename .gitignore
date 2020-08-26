@@ -27,3 +27,6 @@ debian/*.substvars
 debian/linuxcnc-ethercat/
 debian/linuxcnc-ethercat.debhelper.log
 debian/linuxcnc-ethercat.substvars
+
+# GH Actions temp config
+/.github/local-env.yaml
