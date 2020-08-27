@@ -20,8 +20,8 @@ LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) $(L_HAL) -lethercat
 EXTRA_CFLAGS += $(LCEC_CFLAGS)
 
 module-dir:
-	test -d "$(DESTDIR)$(EMC2_RTLIB_DIR)" || \
-	    mkdir -p "$(DESTDIR)$(EMC2_RTLIB_DIR)"
+	test -d "$(DESTDIR)$(RTLIBDIR)" || \
+	    mkdir -p "$(DESTDIR)$(RTLIBDIR)"
 install:  module-dir
 
 all: modules

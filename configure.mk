@@ -52,4 +52,5 @@ BINDIR = $(EMC2_HOME)/bin
 DATAROOTDIR = $(EMC2_HOME)/share
 LCEC_FLAGS = -DCTYPE_H='<rtapi_ctype.h>'
 L_HAL = -llinuxcnchal
+RTLIBDIR = $(EMC2_RTLIB_DIR)
 endif
