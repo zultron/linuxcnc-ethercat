@@ -20,6 +20,7 @@ configure:
 	    echo "RTFLAGS += $(RTFLAGS)"; \
 	    echo "KERNELRELEASE = $(KERNELRELEASE)"; \
 	    echo "EXTRA_CFLAGS += $(EXTRA_CFLAGS)"; \
+	    echo "LCEC_CFLAGS = -DCTYPE_H='$(CTYPE_H)'"; \
 	    echo "USE_RTLIBM = $(USE_RTLIBM)"; \
 	    echo "BINDIR = $(BINDIR)"; \
 	    echo "DATAROOTDIR = $(DATAROOTDIR)"; \
@@ -41,8 +42,10 @@ ifneq (,$(HAL_HOME))
 $(info Configuring for Machinekit)
 BINDIR = $(HAL_HOME)/bin
 DATAROOTDIR = $(HAL_HOME)/share
+CTYPE_H = <ctype.h>
 else
 $(info Configuring for LinuxCNC)
 BINDIR = $(EMC2_HOME)/bin
 DATAROOTDIR = $(EMC2_HOME)/share
+CTYPE_H = <rtapi_ctype.h>
 endif

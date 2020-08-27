@@ -17,6 +17,7 @@ all:
 else
 
 LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
+EXTRA_CFLAGS += $(LCEC_CFLAGS)
 
 module-dir:
 	test -d "$(DESTDIR)$(EMC2_RTLIB_DIR)" || \
