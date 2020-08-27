@@ -19,6 +19,7 @@ src/lcec.exported
 src/Module.symvers
 
 # packaging
+/debian/.debhelper/
 /debian/debhelper-build-stamp
 /debian/files
 /debian/linuxcnc-ethercat.debhelper.log
