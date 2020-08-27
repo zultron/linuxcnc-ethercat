@@ -1,6 +1,7 @@
 include ../config.mk
 
-EXTRA_CFLAGS := $(filter-out -Wframe-larger-than=%,$(EXTRA_CFLAGS))
+EXTRA_CFLAGS := $(filter-out -Wframe-larger-than=%,$(EXTRA_CFLAGS)) \
+	$(LCEC_CFLAGS)
 
 LCEC_CONF_OBJS = \
 	lcec_conf.o \
