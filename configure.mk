@@ -27,6 +27,7 @@ configure:
 	    echo "RUN_IN_PLACE = $(RUN_IN_PLACE)"; \
 	    echo "RTLIBDIR = $(RTLIBDIR)"; \
 	    echo "LIBDIR = $(LIBDIR)"; \
+	    echo "L_HAL = $(L_HAL)"; \
 	    echo "prefix = $(prefix)"; \
 	} > config.mk.tmp
 
@@ -43,9 +44,11 @@ $(info Configuring for Machinekit)
 BINDIR = $(HAL_HOME)/bin
 DATAROOTDIR = $(HAL_HOME)/share
 CTYPE_H = <ctype.h>
+L_HAL = -lhal -lhalulapi
 else
 $(info Configuring for LinuxCNC)
 BINDIR = $(EMC2_HOME)/bin
 DATAROOTDIR = $(EMC2_HOME)/share
 CTYPE_H = <rtapi_ctype.h>
+L_HAL = -llinuxcnchal
 endif
