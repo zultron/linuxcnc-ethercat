@@ -19,7 +19,7 @@ install: lcec_conf
 lcec_conf: $(LCEC_CONF_OBJS)
 	@echo Compiling $@
 	$(CC) -o $@ $(CFLAGS) $(LCEC_CONF_OBJS) \
-	    -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lexpat
+	    -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) $(L_HAL) -lexpat
 
 %.o: %.c
 	@echo Compiling ULAPI $@
