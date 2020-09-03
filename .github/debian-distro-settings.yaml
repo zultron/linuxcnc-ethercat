@@ -68,22 +68,23 @@ allowedCombinations:
     release: 10
   - architecture: amd64
     release: 20.04
-  # arm64:
-  - architecture: arm64
-    release: 9
-  - architecture: arm64
-    release: 10
-  - architecture: arm64
-    release: 20.04
-  # armhf:
-  - architecture: armhf
-    release: 9
-  - architecture: armhf
-    release: 10
-  - architecture: armhf
-    release: 20.04
-  # i386:  (discontinued in Ubuntu Focal)
-  - architecture: i386
-    release: 9
-  - architecture: i386
-    release: 10
+  # Machinekit needs work on Multi-Arch: packaging
+  # # arm64:
+  # - architecture: arm64
+  #   release: 9
+  # - architecture: arm64
+  #   release: 10
+  # - architecture: arm64
+  #   release: 20.04
+  # # armhf:
+  # - architecture: armhf
+  #   release: 9
+  # - architecture: armhf
+  #   release: 10
+  # - architecture: armhf
+  #   release: 20.04
+  # # i386:  (discontinued in Ubuntu Focal)
+  # - architecture: i386
+  #   release: 9
+  # - architecture: i386
+  #   release: 10
