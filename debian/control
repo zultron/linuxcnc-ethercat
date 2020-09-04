@@ -9,5 +9,7 @@ Standards-Version: 3.9.3
 
 Package: linuxcnc-ethercat
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, linuxcnc | linuxcnc-sim | linuxcnc-uspace | machinekit, etherlabmaster
+Depends: ${shlibs:Depends}, ${misc:Depends},
+  linuxcnc | linuxcnc-sim | linuxcnc-uspace | machinekit-hal,
+  etherlabmaster
 Description: LinuxCNC EtherCAT HAL driver
