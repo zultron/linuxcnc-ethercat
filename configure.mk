@@ -29,6 +29,7 @@ configure:
 	    echo "LIBDIR = $(LIBDIR)"; \
 	    echo "L_HAL = $(L_HAL)"; \
 	    echo "prefix = $(prefix)"; \
+	    echo "BUILD_VERBOSE = $(BUILD_VERBOSE)"; \
 	} > config.mk.tmp
 
 # include modinc
@@ -53,4 +54,8 @@ DATAROOTDIR = $(EMC2_HOME)/share
 LCEC_FLAGS = -DCTYPE_H='<rtapi_ctype.h>'
 L_HAL = -llinuxcnchal
 RTLIBDIR = $(EMC2_RTLIB_DIR)
+endif
+
+ifeq ($(DH_VERBOSE),1)
+BUILD_VERBOSE = 1
 endif
