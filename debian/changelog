@@ -1,3 +1,13 @@
+linuxcnc-ethercat (0.9.5) unstable; urgency=medium
+
+  * (This changelog entry retrobackported in 2023-05-17 rebase)
+  * Update packaging to accommodate Machinekit changes, both API and build system
+  * Update package deps for Zultron's ec-debianize fork
+  * Fix linking on Ubuntu, where `--as-needed` is default
+  * Add machinekit_ci
+
+ -- John Morris <john@zultron.com>  Sun, 27 Sep 2020 20:11:56 +0000
+
 linuxcnc-ethercat (0.9.4) unstable; urgency=low
 
   * added EL7211 debug pins
