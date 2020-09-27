@@ -16,7 +16,7 @@ all:
 
 else
 
-LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) $(L_HAL) -lethercat
+LDFLAGS += -Wl,-rpath,$(LIBDIR) -Wl,--no-as-needed -L$(LIBDIR) $(L_HAL) -lethercat
 EXTRA_CFLAGS += $(LCEC_CFLAGS)
 
 module-dir:
