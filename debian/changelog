@@ -1,3 +1,12 @@
+linuxcnc-ethercat (0.9.4) unstable; urgency=medium
+
+  * Update packaging to accommodate Machinekit changes, both API and build system
+  * Update package deps for Zultron's ec-debianize fork
+  * Fix linking on Ubuntu, where `--as-needed` is default
+  * Add machinekit_ci
+
+ -- John Morris <john@zultron.com>  Sun, 27 Sep 2020 20:11:56 +0000
+
 linuxcnc-ethercat (0.9.3) unstable; urgency=medium
 
   * NEW: support to sync master's task to the EC refclock (sittner)
