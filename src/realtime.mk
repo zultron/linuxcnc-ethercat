@@ -16,7 +16,10 @@ all:
 
 else
 
-LDFLAGS += -Wl,-rpath,$(LIBDIR) -Wl,--no-as-needed -L$(LIBDIR) $(L_HAL) -lethercat
+ifeq ($(RUN_IN_PLACE),yes)
+LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR)
+endif
+EXTRA_LDFLAGS += -lethercat
 EXTRA_CFLAGS += $(LCEC_CFLAGS)
 
 module-dir:
