@@ -41,10 +41,6 @@ cloudsmith_repo_slug: etherlabmaster
 
 osDistros:
   # List of Debian and Ubuntu OS version configuration data
-  - baseImage: debian:stretch
-    codename: Stretch
-    vendor: Debian
-    release: 9
   - baseImage: debian:buster
     codename: Buster
     vendor: Debian
@@ -62,8 +58,6 @@ allowedCombinations:
   # Supported combinations of `release` : architecture
   #
   # amd64:
-  - architecture: amd64
-    release: 9
   - architecture: amd64
     release: 10
   - architecture: amd64
