@@ -3,8 +3,9 @@ linuxcnc-ethercat (0.9.6) unstable; urgency=medium
   * CI: Update machinekit_ci action tags to @v2
   * CI:  Enable Debian Bullseye builds; remove Stretch
   * Update cloudsmith.io repos
+  * Fix package deps
 
- -- John Morris <john@zultron.com>  Sun, 14 Nov 2021 20:17:51 -0600
+ -- John Morris <john@zultron.com>  Mon, 15 Nov 2021 13:38:17 -0600
 
 linuxcnc-ethercat (0.9.5) unstable; urgency=medium
 
