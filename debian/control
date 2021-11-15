@@ -12,5 +12,5 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
   linuxcnc | linuxcnc-sim | linuxcnc-uspace | machinekit-hal,
   libethercat
-Recommends: etherlabmaster
+Recommends: etherlabmaster-dkms
 Description: LinuxCNC EtherCAT HAL driver
