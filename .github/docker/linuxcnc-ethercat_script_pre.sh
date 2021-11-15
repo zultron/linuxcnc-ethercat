@@ -4,15 +4,15 @@
 
 # IgH EtherLab Master:  Cloudsmith etherlabmaster repo
 curl -1sLf \
-     'https://dl.cloudsmith.io/public/zultron/etherlabmaster/cfg/setup/bash.deb.sh' \
-    | bash
+    'https://dl.cloudsmith.io/public/zultron/etherlabmaster/setup.deb.sh' \
+    | sudo -E bash
 
 # Machinkeit-HAL deps:  Cloudsmith machinekit repo
 curl -1sLf \
-     'https://dl.cloudsmith.io/public/machinekit/machinekit/cfg/setup/bash.deb.sh' \
-    | bash
+    'https://dl.cloudsmith.io/public/machinekit/machinekit/setup.deb.sh' \
+    | sudo -E bash
 
 # Machinekit:  Cloudsmith machinekit-hal repo
 curl -1sLf \
-     'https://dl.cloudsmith.io/public/machinekit/machinekit-hal/cfg/setup/bash.deb.sh' \
-    | bash
+    'https://dl.cloudsmith.io/public/machinekit/machinekit-hal/setup.deb.sh' \
+    | sudo -E bash
