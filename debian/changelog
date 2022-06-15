@@ -1,3 +1,10 @@
+linuxcnc-ethercat (0.9.6~1pdo-overlap) unstable; urgency=medium
+
+  * Force overlapping PDOs for Ingenia drives w/TI chipset (will break
+    other drives)
+
+ -- John Morris <john@zultron.com>  Wed, 15 Jun 2022 11:55:11 -0500
+
 linuxcnc-ethercat (0.9.6) unstable; urgency=medium
 
   * Fix package deps

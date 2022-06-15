@@ -386,6 +386,8 @@ int rtapi_app_main(void) {
           rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s\n", master->name, slave->name);
           goto fail2;
         }
+        // Hack this option on for Ingenia drives w/TI chipset
+        ecrt_slave_config_overlapping_pdos(slave->config, 1);
       }
 
       // export state pins
