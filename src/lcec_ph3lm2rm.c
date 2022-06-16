@@ -155,8 +155,8 @@ int lcec_ph3lm2rm_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t
   slave->hal_data = hal_data;
 
   // initialize POD entries
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000, 0x01, &hal_data->err_reset_os, &hal_data->err_reset_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x01, &hal_data->sync_locked_os, &hal_data->sync_locked_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x7000, 0x01, &hal_data->err_reset_os, &hal_data->err_reset_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000, 0x01, &hal_data->sync_locked_os, &hal_data->sync_locked_bp);
 
   // export pins
   if ((err = lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
@@ -210,14 +210,14 @@ int lcec_ph3lm2rm_lm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entr
   int err;
 
   // initialize POD entries
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x01, &hal_data->ch.latch_ena_pos_os, &hal_data->ch.latch_ena_pos_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x02, &hal_data->ch.latch_ena_neg_os, &hal_data->ch.latch_ena_neg_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x01, &hal_data->ch.error_os, &hal_data->ch.error_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x02, &hal_data->ch.latch_valid_os, &hal_data->ch.latch_valid_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x03, &hal_data->ch.latch_state_os, &hal_data->ch.latch_state_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x04, &hal_data->signal_level_os, NULL);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x05, &hal_data->ch.counter_os, NULL);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x06, &hal_data->ch.latch_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x01, &hal_data->ch.latch_ena_pos_os, &hal_data->ch.latch_ena_pos_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x02, &hal_data->ch.latch_ena_neg_os, &hal_data->ch.latch_ena_neg_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x01, &hal_data->ch.error_os, &hal_data->ch.error_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x02, &hal_data->ch.latch_valid_os, &hal_data->ch.latch_valid_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x03, &hal_data->ch.latch_state_os, &hal_data->ch.latch_state_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x04, &hal_data->signal_level_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x05, &hal_data->ch.counter_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x06, &hal_data->ch.latch_os, NULL);
 
   // init channel
   if ((err = lcec_ph3lm2rm_enc_init(slave, &hal_data->ch, pfx, 0.0005)) != 0) {
@@ -242,14 +242,14 @@ int lcec_ph3lm2rm_rm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entr
   int err;
 
   // initialize POD entries
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x01, &hal_data->latch_sel_idx_os, &hal_data->latch_sel_idx_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x02, &hal_data->ch.latch_ena_pos_os, &hal_data->ch.latch_ena_pos_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x03, &hal_data->ch.latch_ena_neg_os, &hal_data->ch.latch_ena_neg_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x01, &hal_data->ch.error_os, &hal_data->ch.error_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x02, &hal_data->ch.latch_valid_os, &hal_data->ch.latch_valid_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x03, &hal_data->ch.latch_state_os, &hal_data->ch.latch_state_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x04, &hal_data->ch.counter_os, NULL);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x05, &hal_data->ch.latch_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x01, &hal_data->latch_sel_idx_os, &hal_data->latch_sel_idx_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x02, &hal_data->ch.latch_ena_pos_os, &hal_data->ch.latch_ena_pos_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x7000 + ios, 0x03, &hal_data->ch.latch_ena_neg_os, &hal_data->ch.latch_ena_neg_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x01, &hal_data->ch.error_os, &hal_data->ch.error_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x02, &hal_data->ch.latch_valid_os, &hal_data->ch.latch_valid_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x03, &hal_data->ch.latch_state_os, &hal_data->ch.latch_state_bp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x04, &hal_data->ch.counter_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x05, &hal_data->ch.latch_os, NULL);
 
   // init channel
   if ((err = lcec_ph3lm2rm_enc_init(slave, &hal_data->ch, pfx, 1.0)) != 0) {

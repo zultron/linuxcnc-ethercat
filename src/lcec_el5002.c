@@ -217,13 +217,13 @@ int lcec_el5002_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     chan = &hal_data->chans[i];
 
     // initialize POD entries
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &chan->err_data_os, &chan->err_data_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x02, &chan->err_frame_os, &chan->err_frame_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x03, &chan->err_power_os, &chan->err_power_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0e, &chan->err_sync_os, &chan->err_sync_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0f, &chan->tx_state_os, &chan->tx_state_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x10, &chan->tx_toggle_os, &chan->tx_toggle_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->count_pdo_os, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &chan->err_data_os, &chan->err_data_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x02, &chan->err_frame_os, &chan->err_frame_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x03, &chan->err_power_os, &chan->err_power_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0e, &chan->err_sync_os, &chan->err_sync_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0f, &chan->tx_state_os, &chan->tx_state_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x10, &chan->tx_toggle_os, &chan->tx_toggle_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->count_pdo_os, NULL);
 
     // export pins
     if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {

@@ -101,11 +101,11 @@ int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_
   idn_vel_exp = EC_READ_S16(idn_buf);
 
   // initialize POD entries
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0087, 0x01 + index, &chan->status_pdo_os, NULL);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0033, 0x01 + index, &chan->pos_fb_pdo_os, NULL);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0054, 0x01 + index, &chan->torque_fb_pdo_os, NULL);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0086, 0x01 + index, &chan->ctrl_pdo_os, NULL);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0018, 0x01 + index, &chan->vel_cmd_pdo_os, NULL);
+  LCEC_PDOINIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x0087, 0x01 + index, &chan->status_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x0033, 0x01 + index, &chan->pos_fb_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x0054, 0x01 + index, &chan->torque_fb_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x0086, 0x01 + index, &chan->ctrl_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x0018, 0x01 + index, &chan->vel_cmd_pdo_os, NULL);
 
   // export pins
   if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
@@ -125,7 +125,7 @@ int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_
 
   chan->fb2_enabled = get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2);
   if (chan->fb2_enabled) {
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0035, 0x01 + index, &chan->pos_fb2_pdo_os, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x0035, 0x01 + index, &chan->pos_fb2_pdo_os, NULL);
     if ((err = lcec_param_newf_list(chan, slave_fb2_params, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
       return err;
     }
@@ -138,7 +138,7 @@ int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_
 
   chan->diag_enabled = get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG);
   if (chan->diag_enabled) {
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0186, 0x01 + index, &chan->diag_pdo_os, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x0186, 0x01 + index, &chan->diag_pdo_os, NULL);
     if ((err = lcec_pin_newf_list(chan, slave_diag_pins, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
       return err;
     }
