@@ -20,7 +20,7 @@ ifeq ($(RUN_IN_PLACE),yes)
 LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR)
 endif
 EXTRA_LDFLAGS += -lethercat
-EXTRA_CFLAGS += $(LCEC_CFLAGS)
+EXTRA_CFLAGS += -Wall $(CFLAGS) $(LCEC_CFLAGS)
 
 module-dir:
 	test -d "$(DESTDIR)$(RTLIBDIR)" || \
