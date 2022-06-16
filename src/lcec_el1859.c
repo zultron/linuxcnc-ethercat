@@ -69,8 +69,8 @@ int lcec_el1859_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   // initialize pins
   for (i=0, pin=hal_data; i<LCEC_EL1859_PINS; i++, pin++) {
     // initialize POD entry
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &pin->pdo_in_os, &pin->pdo_in_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7080 + (i << 4), 0x01, &pin->pdo_out_os, &pin->pdo_out_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &pin->pdo_in_os, &pin->pdo_in_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x7080 + (i << 4), 0x01, &pin->pdo_out_os, &pin->pdo_out_bp);
 
     // export pins
     if ((err = lcec_pin_newf_list(pin, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {

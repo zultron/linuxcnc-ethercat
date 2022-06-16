@@ -145,10 +145,10 @@ int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     chan = &hal_data->chans[i];
 
     // initialize PDO entries     position      vend.id     prod.code   index   sindx            offset                             bit pos
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x01 + i,        &hal_data->chans[i].in_offs,       &hal_data->chans[i].in_bitp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xae + i,        &hal_data->chans[i].Status_offs,   NULL);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xb0 + (i << 4), &hal_data->chans[i].LatchPos_offs, NULL);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xb8 + (i << 4), &hal_data->chans[i].LatchNeg_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x6000, 0x01 + i,        &hal_data->chans[i].in_offs,       &hal_data->chans[i].in_bitp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x1d09, 0xae + i,        &hal_data->chans[i].Status_offs,   NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x1d09, 0xb0 + (i << 4), &hal_data->chans[i].LatchPos_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->alias, slave->index, slave->vid, slave->pid, 0x1d09, 0xb8 + (i << 4), &hal_data->chans[i].LatchNeg_offs, NULL);
 
     // export pins
     if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
