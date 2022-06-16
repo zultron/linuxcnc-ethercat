@@ -82,6 +82,7 @@ jobs:
         dockerRegistryUser: ${{ github.actor }}
         packageSigningKey: ${{ secrets.PACKAGE_SIGNING_KEY }}
         uploadDirectory: ${{ github.event.repository.name }}-${{ matrix.vendorLower }}
+      env:  CFLAGS=-Werror
 
     - name: >
         Upload package artifacts ${{ matrix.vendor }}
