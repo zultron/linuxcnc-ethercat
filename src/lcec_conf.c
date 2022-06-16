@@ -647,6 +647,12 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
       continue;
     }
 
+    // parse alias
+    if (strcmp(name, "alias") == 0) {
+      p->alias = atoi(val);
+      continue;
+    }
+
     // parse index
     if (strcmp(name, "idx") == 0) {
       p->index = atoi(val);
@@ -689,7 +695,10 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
 
   // set default name
   if (p->name[0] == 0) {
-    snprintf(p->name, LCEC_CONF_STR_MAXLEN, "%d", p->index);
+    if (p->alias == 0)
+      snprintf(p->name, LCEC_CONF_STR_MAXLEN, "%d", p->index);
+    else
+      snprintf(p->name, LCEC_CONF_STR_MAXLEN, "%d:%d", p->alias, p->index);
   }
 
   // type is required

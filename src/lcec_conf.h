@@ -213,7 +213,8 @@ typedef struct {
 
 typedef struct {
   LCEC_CONF_TYPE_T confType;
-  int index;
+  uint16_t alias;
+  uint16_t index;
   LCEC_SLAVE_TYPE_T type;
   uint32_t vid;
   uint32_t pid;
