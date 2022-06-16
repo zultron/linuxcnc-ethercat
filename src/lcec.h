@@ -44,8 +44,9 @@ do {                             \
 } while (0);                     \
 
 // pdo macros
-#define LCEC_PDO_INIT(pdo, pos, vid, pid, idx, sidx, off, bpos) \
+#define LCEC_PDO_INIT(pdo, al, pos, vid, pid, idx, sidx, off, bpos)  \
 do {                        \
+  pdo->alias = al;          \
   pdo->position = pos;      \
   pdo->vendor_id = vid;     \
   pdo->product_code = pid;  \
@@ -175,7 +176,9 @@ typedef struct lcec_slave {
   struct lcec_slave *prev;
   struct lcec_slave *next;
   struct lcec_master *master;
-  int index;
+  uint16_t alias;
+  uint16_t index;
+  uint16_t position;
   char name[LCEC_CONF_STR_MAXLEN];
   uint32_t vid;
   uint32_t pid;
@@ -218,7 +221,9 @@ int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...);
 
 LCEC_CONF_MODPARAM_VAL_T *lcec_modparam_get(struct lcec_slave *slave, int id);
 
-lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index);
+lcec_slave_t *lcec_slave_by_index(
+  struct lcec_master *master, uint16_t index
+  );
 
 void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigned int master_offset);
 

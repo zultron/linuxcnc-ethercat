@@ -283,6 +283,7 @@ int rtapi_app_main(void) {
   lcec_slave_t *slave;
   char name[HAL_NAME_LEN + 1];
   ec_pdo_entry_reg_t *pdo_entry_regs;
+  ec_slave_config_state_t slave_state;
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
   struct timeval tv;
@@ -326,10 +327,17 @@ int rtapi_app_main(void) {
     pdo_entry_regs = master->pdo_entry_regs;
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       // read slave config
-      if (!(slave->config = ecrt_master_slave_config(master->master, 0, slave->index, slave->vid, slave->pid))) {
+      if (!(slave->config = ecrt_master_slave_config(
+                master->master,
+                slave->alias, slave->index, slave->vid, slave->pid
+                ))) {
         rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to read slave %s.%s configuration\n", master->name, slave->name);
         goto fail2;
       }
+
+      // read slave ring position
+      ecrt_slave_config_state(slave->config, &slave_state);
+      slave->position = slave_state.position;
 
       // initialize sdos
       if (slave->sdo_config != NULL) {
@@ -643,6 +651,7 @@ int lcec_parse_config(void) {
         idn_config = NULL;
         modparams = NULL;
 
+        slave->alias = slave_conf->alias;
         slave->index = slave_conf->index;
         strncpy(slave->name, slave_conf->name, LCEC_CONF_STR_MAXLEN);
         slave->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
@@ -1365,7 +1374,10 @@ int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, ui
   size_t result_size;
   uint32_t abort_code;
 
-  if ((err = ecrt_master_sdo_upload(master->master, slave->index, index, subindex, target, size, &result_size, &abort_code))) {
+  if ((err = ecrt_master_sdo_upload(
+           master->master, slave->position,
+           index, subindex, target, size, &result_size, &abort_code
+           ))) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute SDO upload (0x%04x:0x%02x, error %d, abort_code %08x)\n",
       master->name, slave->name, index, subindex, err, abort_code);
     return -1;
@@ -1386,7 +1398,10 @@ int lcec_read_idn(struct lcec_slave *slave, uint8_t drive_no, uint16_t idn, uint
   size_t result_size;
   uint16_t error_code;
 
-  if ((err = ecrt_master_read_idn(master->master, slave->index, drive_no, idn, target, size, &result_size, &error_code))) {  
+  if ((err = ecrt_master_read_idn(
+         master->master, slave->position,
+         drive_no, idn, target, size, &result_size, &error_code
+         ))) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute IDN read (drive %u idn %c-%u-%u, error %d, error_code %08x)\n",
       master->name, slave->name, drive_no, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, err, error_code);
     return -1;
@@ -1569,11 +1584,13 @@ LCEC_CONF_MODPARAM_VAL_T *lcec_modparam_get(struct lcec_slave *slave, int id) {
   return NULL;
 }
 
-lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index) {
+lcec_slave_t *lcec_slave_by_index(
+    struct lcec_master *master, uint16_t index
+    ) {
   lcec_slave_t *slave;
 
   for (slave = master->first_slave; slave != NULL; slave = slave->next) {
-    if (slave->index == index) {
+    if (slave->position == index) {
       return slave;
     }
   }
