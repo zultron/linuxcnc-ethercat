@@ -1,6 +1,7 @@
 include ../config.mk
 
-EXTRA_CFLAGS := $(filter-out -Wframe-larger-than=%,$(EXTRA_CFLAGS)) \
+EXTRA_CFLAGS := \
+        $(filter-out -D_FORTIFY_SOURCE=0 -Wframe-larger-than=%,$(EXTRA_CFLAGS)) \
 	$(LCEC_CFLAGS)
 
 LCEC_CONF_OBJS = \
@@ -23,6 +24,6 @@ lcec_conf: $(LCEC_CONF_OBJS)
 
 %.o: %.c
 	@echo Compiling ULAPI $@
-	$(CC) -o $@ $(CFLAGS) $(EXTRA_CFLAGS) \
+	$(CC) -o $@ -Wall $(CFLAGS) $(EXTRA_CFLAGS) \
 	    -URTAPI -U__MODULE__ -DULAPI -Os -c $<
 
