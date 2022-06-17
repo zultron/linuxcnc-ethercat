@@ -485,6 +485,13 @@ int rtapi_app_main(void) {
             master->name, slave->name);
           goto fail2;
         }
+        if (slave->overlapping_pdos) {
+          ecrt_slave_config_overlapping_pdos(slave->config, 1);
+          rtapi_print_msg (
+            RTAPI_MSG_DBG,
+            LCEC_MSG_PFX "Slave %s.%s:  Operlapping PDOs enablef\n",
+            master->name, slave->name);
+        }
         for(ec_sync_info_t *smconf = slave->sync_info; smconf->index < 0xff; smconf++) {
           if (smconf->dir < 1 || smconf->dir > 3) {
             rtapi_print_msg(
@@ -882,6 +889,7 @@ int lcec_parse_config(void) {
         if (slave_conf->configPdos) {
           slave->sync_info = generic_sync_managers;
         }
+        slave->overlapping_pdos = slave_conf->overlappingPdos;
         slave->sdo_config = sdo_config;
         slave->idn_config = idn_config;
         slave->modparams = modparams;
