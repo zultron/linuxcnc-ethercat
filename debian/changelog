@@ -1,3 +1,12 @@
+linuxcnc-ethercat (0.9.7) unstable; urgency=medium
+
+  * Add slave alias support
+  * Add slave overlapping PDO option
+  * Improve initialization log messages
+  * CFLAGS and warnings updates
+
+ -- John Morris <john@zultron.com>  Fri, 17 Jun 2022 14:01:45 -0500
+
 linuxcnc-ethercat (0.9.6) unstable; urgency=medium
 
   * CI: Update machinekit_ci action tags to @v2
