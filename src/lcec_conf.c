@@ -656,6 +656,14 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
         p->configPdos = (strcasecmp(val, "true") == 0);
         continue;
       }
+
+      // parse overlappingPdos
+      if (strcmp(name, "overlappingPdos") == 0) {
+        p->overlappingPdos = (strcasecmp(val, "true") == 0);
+        rtapi_print_msg(
+          RTAPI_MSG_DBG, "      overlappingPdos %s", p->overlappingPdos ? "t" : "f");
+        continue;
+      }
     }
 
     // handle error
