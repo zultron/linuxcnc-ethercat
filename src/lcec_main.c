@@ -312,6 +312,20 @@ int rtapi_app_main(void) {
       goto fail2;
     }
 
+    // check master status
+    ec_master_info_t master_info;
+    if ((ecrt_master(master->master, &master_info))) {
+      rtapi_print_msg(
+        RTAPI_MSG_ERR,
+        LCEC_MSG_PFX "failed to obtain master %s (index %d) information\n",
+        master->name, master->index);
+      goto fail2;
+    }
+    rtapi_print_msg(
+      RTAPI_MSG_INFO, LCEC_MSG_PFX "Master %s (index %d):  %d slaves; link %s\n",
+      master->name, master->index, master_info.slave_count,
+      master_info.link_up ? "up" : "down");
+
 #ifdef __KERNEL__
     // register callbacks
     ecrt_master_callbacks(master->master, lcec_request_lock, lcec_release_lock, master);
@@ -335,9 +349,13 @@ int rtapi_app_main(void) {
         goto fail2;
       }
 
-      // read slave ring position
+      // check slave status
       ecrt_slave_config_state(slave->config, &slave_state);
       slave->position = slave_state.position;
+      rtapi_print_msg(RTAPI_MSG_INFO,
+                      LCEC_MSG_PFX "Slave %s.%s (%d %d:%d) ring position %d\n",
+                      master->name, slave->name, master->index,
+                      slave->alias, slave->index, slave->position);
 
       // initialize sdos
       if (slave->sdo_config != NULL) {
@@ -345,11 +363,20 @@ int rtapi_app_main(void) {
           if (sdo_config->subindex == LCEC_CONF_SDO_COMPLETE_SUBIDX) {
             if (ecrt_slave_config_complete_sdo(slave->config, sdo_config->index, &sdo_config->data[0], sdo_config->length) != 0) {
               rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x (complete)\n", master->name, slave->name, sdo_config->index);
-            }
+            } else
+              rtapi_print_msg(
+                RTAPI_MSG_DBG,
+                LCEC_MSG_PFX "Slave %s.%s complete SDO %04Xh size %zu\n",
+                master->name, slave->name, sdo_config->index, sdo_config->length);
           } else {
             if (ecrt_slave_config_sdo(slave->config, sdo_config->index, sdo_config->subindex, &sdo_config->data[0], sdo_config->length) != 0) {
               rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x:%02x\n", master->name, slave->name, sdo_config->index, sdo_config->subindex);
-            }
+            } else
+              rtapi_print_msg(
+                RTAPI_MSG_DBG,
+                LCEC_MSG_PFX "Slave %s.%s SDO %04X-%02Xh size %zu\n",
+                master->name, slave->name,
+                sdo_config->index, sdo_config->subindex, sdo_config->length);
           }
         }
       }
@@ -377,24 +404,72 @@ int rtapi_app_main(void) {
         ecrt_slave_config_dc(slave->config, slave->dc_conf->assignActivate,
           slave->dc_conf->sync0Cycle, slave->dc_conf->sync0Shift,
           slave->dc_conf->sync1Cycle, slave->dc_conf->sync1Shift);
-        rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "configuring DC for slave %s.%s: assignActivate=x%x sync0Cycle=%d sync0Shift=%d sync1Cycle=%d sync1Shift=%d\n",
+        rtapi_print_msg (
+          RTAPI_MSG_DBG, LCEC_MSG_PFX
+          "Slave %s.%s DC: assignActivate=0x%x sync0Cycle=%d sync0Shift=%d"
+          " sync1Cycle=%d sync1Shift=%d\n",
           master->name, slave->name, slave->dc_conf->assignActivate,
           slave->dc_conf->sync0Cycle, slave->dc_conf->sync0Shift,
           slave->dc_conf->sync1Cycle, slave->dc_conf->sync1Shift);
-      }
+      } else
+        rtapi_print_msg (
+          RTAPI_MSG_DBG,
+          LCEC_MSG_PFX "Slave %s.%s:  No DC\n", master->name, slave->name);
 
       // Configure the slave's watchdog times.
       if (slave->wd_conf != NULL) {
         ecrt_slave_config_watchdog(slave->config, slave->wd_conf->divider, slave->wd_conf->intervals);
       }
 
-      // configure slave
+      // configure slave PDOs
       if (slave->sync_info != NULL) {
         if (ecrt_slave_config_pdos(slave->config, EC_END, slave->sync_info)) {
-          rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s\n", master->name, slave->name);
+          rtapi_print_msg (
+            RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s PDOs\n",
+            master->name, slave->name);
           goto fail2;
         }
-      }
+        for(ec_sync_info_t *smconf = slave->sync_info; smconf->index < 0xff; smconf++) {
+          if (smconf->dir < 1 || smconf->dir > 3) {
+            rtapi_print_msg(
+              RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave %s.%s sync manager %d:  invalid dir %d\n",
+              master->name, slave->name, smconf->index, smconf->dir);
+            goto fail2;
+          }
+          if (smconf->watchdog_mode < 0 || smconf->watchdog_mode > 2) {
+            rtapi_print_msg(
+              RTAPI_MSG_ERR,
+              LCEC_MSG_PFX "Slave %s.%s sync manager %d:  invalid watchdog mode %d\n",
+              master->name, slave->name, smconf->index, smconf->watchdog_mode);
+            goto fail2;
+          }
+          char* sm_dirs[] = { "invalid", "out", "in", "both" };
+          char* wd_modes[] = { "default", "enable", "disable" };
+          rtapi_print_msg(
+            RTAPI_MSG_DBG,
+            LCEC_MSG_PFX "Slave %s.%s:  sync manager %d, %d PDOs,"
+            " dir %s, watchdog mode %s\n",
+            master->name, slave->name, smconf->index, smconf->n_pdos,
+            sm_dirs[smconf->dir], wd_modes[smconf->watchdog_mode]);
+          for (ec_pdo_info_t *pdo = smconf->pdos;
+               pdo < smconf->pdos + smconf->n_pdos; pdo++) {
+            rtapi_print_msg(
+              RTAPI_MSG_DBG,
+              LCEC_MSG_PFX "Slave %s.%s:    PDO mapping %04Xh, %d entries\n",
+              master->name, slave->name, pdo->index, pdo->n_entries);
+            for (ec_pdo_entry_info_t *entry = pdo->entries;
+                 entry < pdo->entries + pdo->n_entries; entry++)
+              rtapi_print_msg (
+                RTAPI_MSG_DBG,
+                LCEC_MSG_PFX "Slave %s.%s:      PDO entry %04X-%02Xh, bit length %d\n",
+                master->name, slave->name,
+                entry->index, entry->subindex, entry->bit_length);
+          }
+        }
+      } else
+        rtapi_print_msg (
+          RTAPI_MSG_DBG,
+          LCEC_MSG_PFX "Slave %s.%s:  No sync manager\n", master->name, slave->name);
 
       // export state pins
       if ((slave->hal_state_data = lcec_init_slave_state_hal(master->name, slave->name)) == NULL) {
@@ -402,7 +477,7 @@ int rtapi_app_main(void) {
       }
     }
 
-    // terminate POD entries
+    // terminate PDO entries
     pdo_entry_regs->index = 0;
 
     // register PDO entries
@@ -410,6 +485,9 @@ int rtapi_app_main(void) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s PDO entry registration failed\n", master->name);
       goto fail2;
     }
+
+    rtapi_print_msg(
+      RTAPI_MSG_DBG, LCEC_MSG_PFX "master %s PDOs initialized\n", master->name);
 
     // initialize application time
     lcec_gettimeofday(&tv);
@@ -432,6 +510,9 @@ int rtapi_app_main(void) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to activate master %s\n", master->name);
       goto fail2;
     }
+    rtapi_print_msg (
+      RTAPI_MSG_DBG, LCEC_MSG_PFX "master %s configuration complete\n",
+      master->name);
 
     // Get internal process data for domain
     master->process_data = ecrt_domain_data(master->domain);
@@ -462,6 +543,10 @@ int rtapi_app_main(void) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s write funct export failed\n", master->name);
       goto fail2;
     }
+
+    rtapi_print_msg (
+      RTAPI_MSG_INFO, LCEC_MSG_PFX "master %s HAL initialization complete\n",
+      master->name);
   }
 
   // export read-all function
@@ -743,6 +828,10 @@ int lcec_parse_config(void) {
         slave->modparams = modparams;
         slave->dc_conf = NULL;
         slave->wd_conf = NULL;
+
+        rtapi_print_msg(
+          RTAPI_MSG_DBG, LCEC_MSG_PFX "Slave %s.%s (%d:%d) configuration parsed\n",
+          master->name, slave->name, slave->alias, slave->index);
 
         // update master's POD entry count
         master->pdo_entry_count += slave->pdo_entry_count;

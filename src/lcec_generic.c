@@ -95,6 +95,10 @@ int lcec_generic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
     }
   }
 
+  rtapi_print_msg(
+    RTAPI_MSG_INFO, LCEC_MSG_PFX "Slave %s.%s HAL interface initialized\n",
+    master->name, slave->name);
+
   return 0;
 }
 
