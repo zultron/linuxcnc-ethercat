@@ -1,0 +1,24 @@
+<masters>
+  <master idx="0" appTimePeriod="1000000" refClockSyncCycles="1">
+    <!-- Everest XCR drives use overlapping PDOs -->
+    <!-- Set up drive alias 10:0 as "A" axis; HAL name prefix lcec.0.A -->
+    <slave alias="10" idx="0" name="A"
+	   type="generic" vid="0000029c" pid="2c31001" configPdos="true" overlappingPdos="true">
+      <dcConf assignActivate="300" sync0Cycle="*1" sync0Shift="500000"/>
+      <syncManager idx="0" dir="out"/>
+      <syncManager idx="1" dir="in"/>
+      <syncManager idx="2" dir="out">
+	<pdo idx="1600">
+	  <pdoEntry idx="6040" subIdx="00" bitLen="16" halType="u32" halPin="control_word"/>
+          <pdoEntry idx="607A" subIdx="00" bitLen="32" halPin="position_cmd" halType="S32"/>
+	</pdo>
+      </syncManager>
+      <syncManager idx="3" dir="in">
+	<pdo idx="1A00">
+	  <pdoEntry idx="6041" subIdx="00" bitLen="16" halType="u32" halPin="status_word"/>
+          <pdoEntry idx="6064" subIdx="00" bitLen="32" halPin="position_fb" halType="S32"/>
+	</pdo>
+      </syncManager>
+    </slave>
+  </master>
+</masters>
