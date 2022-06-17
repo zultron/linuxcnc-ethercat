@@ -183,6 +183,7 @@ typedef struct lcec_slave {
   uint32_t vid;
   uint32_t pid;
   int pdo_entry_count;
+  uint8_t overlapping_pdos;
   ec_sync_info_t *sync_info;
   ec_slave_config_t *config;
   ec_slave_config_state_t state;

@@ -176,6 +176,7 @@ typedef struct {
   uint32_t vid;
   uint32_t pid;
   int configPdos;
+  uint8_t overlappingPdos;
   unsigned int syncManagerCount;
   unsigned int pdoCount;
   unsigned int pdoEntryCount;
