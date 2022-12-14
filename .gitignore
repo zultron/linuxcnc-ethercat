@@ -30,3 +30,7 @@ debian/linuxcnc-ethercat.substvars
 
 # GH Actions temp config
 /.github/local-env.yaml
+
+# Docker CI build
+/.ccache/
+/linuxcnc-ethercat-build-deps_*.deb
