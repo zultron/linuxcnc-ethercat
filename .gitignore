@@ -27,3 +27,7 @@ src/Module.symvers
 /debian/linuxcnc-ethercat/
 
 /.github/local-env.yaml
+
+# Docker CI build
+/.ccache/
+/linuxcnc-ethercat-build-deps_*.deb
