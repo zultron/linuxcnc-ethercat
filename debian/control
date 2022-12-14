@@ -2,7 +2,10 @@ Source: linuxcnc-ethercat
 Section: unknown
 Priority: extra
 Maintainer: Sascha Ittner <sascha.ittner@modusoft.de>
-Build-Depends: debhelper (>= 8.0.0), libexpat1-dev, linuxcnc-dev | linuxcnc-sim-dev | linuxcnc-uspace-dev | machinekit-dev | machinekit-hal-dev, etherlabmaster-dev
+Build-Depends: debhelper (>= 8.0.0), libexpat1-dev,
+  linuxcnc-dev | linuxcnc-sim-dev | linuxcnc-uspace-dev | machinekit-dev | libmachinekit-hal-dev (>= 0.5.0) | machinekit-hal-dev (<< 0.5.0),
+  linuxcnc-dev | linuxcnc-sim-dev | linuxcnc-uspace-dev | python3-machinekit-hal (>= 0.5.0) | machinekit-hal-dev (<< 0.5.0),
+  etherlabmaster-dev, libethercat
 Standards-Version: 3.9.3
 
 Package: linuxcnc-ethercat
