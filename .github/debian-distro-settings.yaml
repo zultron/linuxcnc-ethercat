@@ -48,3 +48,9 @@ matrix:
   #   release: 14.04
   #   architectures:
   #     - amd64
+  - baseImage: ubuntu:jammy
+    codename: Jammy
+    vendor: Ubuntu
+    release: 22.04
+    architectures:
+      - amd64
