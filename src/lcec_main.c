@@ -638,6 +638,7 @@ void rtapi_app_exit(void) {
 
   // deactivate all masters
   for (master = first_master; master != NULL; master = master->next) {
+    ecrt_master_deactivate_slaves(master->master);
     ecrt_master_deactivate(master->master);
   }
 
