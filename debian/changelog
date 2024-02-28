@@ -1,3 +1,10 @@
+linuxcnc-ethercat (0.9.8) unstable; urgency=medium
+
+  * Rebase on upstream, bringing in new device support, fixes, and floats
+  * Deactivate slaves in rtapi_app_exit() to stop slave sync errors
+
+ -- John Morris <john@zultron.com>  Wed, 28 Feb 2024 11:32:19 -0600
+
 linuxcnc-ethercat (0.9.7) unstable; urgency=medium
 
   * Add slave alias support
