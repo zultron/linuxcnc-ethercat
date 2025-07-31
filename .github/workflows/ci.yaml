@@ -141,7 +141,7 @@ jobs:
         ${{ needs.buildPackages.outputs.pkg_ver }}_${{ matrix.architecture }}
       CLOUDSMITH_VARS: |
         {
-          "api_key" : "${{ secrets.CLOUDSMITH_API_KEY }}"",
+          "api_key" : "${{ secrets.CLOUDSMITH_API_KEY }}",
           "owner" : "${{ vars.CLOUDSMITH_OWNER }}",
           "repo": "${{ vars.CLOUDSMITH_REPO }}",
           "vendor": "${{ matrix.vendor }}",
