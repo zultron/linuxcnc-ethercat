@@ -93,7 +93,7 @@ jobs:
           # Show Docker images
           docker image ls
           # Be sure docker image is pulled
-          docker run --rm $DOCKER_TAG true
+          docker run --rm --entrypoint=/bin/bash $DOCKER_TAG true
           echo ::endgroup::
 
           PKG_VER="$(dpkg-parsechangelog -S version | sed 's/^[0-9]*://')"
