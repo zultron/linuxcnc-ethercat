@@ -87,8 +87,11 @@ jobs:
           set -e
 
           PKG_VER="$(dpkg-parsechangelog -S version | sed 's/^[0-9]*://')"
-          echo "pkg_ver=${PKG_VER}" >> $GITHUB_ENV
+          echo "::set-output name=pkg_ver::$PKG_VER"
           echo "Package version:  $PKG_VER"
+          PKG_VER_ARCH="${PKG_VER}_${ARCHITECTURE}"
+          echo "::set-output name=pkg_ver_arch::$PKG_VER_ARCH"
+          echo "pkg_ver_arch:  $PKG_VER_ARCH"
 
           echo ::group::Build debian packages
 
@@ -119,7 +122,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_REPO: ${{ github.event.repository.name }}
         with:
-          name: ${{ env.NAME_BASE }}-${{ env.GITHUB_SHA }}
+          name: pkgs_${{ steps.build_packages.outputs.pkg_ver_arch }}
           path: pkgs
           if-no-files-found: error
 
@@ -137,6 +140,7 @@ jobs:
       - name: Download pkg build artifacts
         uses: actions/download-artifact@v4
         with:
+          name: pkgs_${{ env.VERSION_ARCH }}
           path: .
 
       - uses: ./.github/actions/pushToCloudsmith
