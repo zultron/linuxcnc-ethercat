@@ -137,6 +137,7 @@ jobs:
         include: ${{ fromJson(needs.buildPackages.outputs.matrix) }}
     name: Push pkgs ${{ matrix.codename }} ${{ matrix.architecture }}
     env:
+      VERSION: ${{ needs.buildPackages.outputs.pkg_ver }}
       VERSION_ARCH: >-
         ${{ needs.buildPackages.outputs.pkg_ver }}_${{ matrix.architecture }}
       CLOUDSMITH_VARS: |
@@ -165,18 +166,15 @@ jobs:
 
       - uses: ./.github/actions/pushToCloudsmith
         with:
-          vars: |
-            ${{ env.CLOUDSMITH_VARS }}
+          vars: ${{ env.CLOUDSMITH_VARS }}
           fileName: linuxcnc-ethercat_${{ env.VERSION_ARCH }}.deb
 
       - uses: ./.github/actions/pushToCloudsmith
         with:
-          vars: |
-            ${{ env.CLOUDSMITH_VARS }}
+          vars: ${{ env.CLOUDSMITH_VARS }}
           fileName: linuxcnc-ethercat-dbgsym_${{ env.VERSION_ARCH }}.ddeb
 
       - uses: ./.github/actions/pushToCloudsmith
         with:
-          vars: |
-            ${{ env.CLOUDSMITH_VARS }}
-          fileName: linuxcnc-ethercat_${{ env.VERSION_ARCH }}.tar.xz
+          vars: ${{ env.CLOUDSMITH_VARS }}
+          fileName: linuxcnc-ethercat_${{ env.VERSION }}.tar.xz
