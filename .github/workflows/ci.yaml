@@ -177,7 +177,10 @@ jobs:
           fileName: linuxcnc-ethercat-dbgsym_${{ env.VERSION_ARCH }}.ddeb
 
       - name:  Push source file
-        uses: ./.github/actions/pushToCloudsmith
-        with:
-          vars: ${{ env.CLOUDSMITH_VARS }}
-          fileName: linuxcnc-ethercat_${{ env.VERSION }}.tar.xz
+        run: |
+          WHERE=${{ vars.CLOUDSMITH_OWNER }}/${{ vars.CLOUDSMITH_REPO }}
+          WHERE+=/${{ matrix.vendor }}/${{ matrix.codename }}
+          bin/cloudsmith push deb \
+              $WHERE \
+              linuxcnc-ethercat-${{ env.VERSION }}.${{ matrix.architecture }}.src \
+              --sources-file linuxcnc-ethercat_${{ env.VERSION }}.tar.xz
