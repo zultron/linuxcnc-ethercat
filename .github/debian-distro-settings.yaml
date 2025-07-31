@@ -1,14 +1,13 @@
-matrix:
-  # List of Debian and Ubuntu OS version configuration data
-  - codename: focal
-    vendor: ubuntu
-    architecture: amd64
+# List of Debian and Ubuntu OS version configuration data
+- codename: focal
+  vendor: ubuntu
+  architecture: amd64
 
-  - codename: jammy
-    vendor: ubuntu
-    architecture: amd64
+- codename: jammy
+  vendor: ubuntu
+  architecture: amd64
 
-  # Trusty needs to build against LinuxCNC
-  # - codename: trusty
-  #   vendor: ubuntu
-  #   architecture: amd64
+# Trusty needs to build against LinuxCNC
+# - codename: trusty
+#   vendor: ubuntu
+#   architecture: amd64
