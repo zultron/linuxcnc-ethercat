@@ -137,6 +137,10 @@ jobs:
       VERSION_ARCH: ${{ needs.buildPackages.outputs.pkg_ver }}_${{ matrix.architecture }}
 
     steps:
+
+      - name: Clone git repository
+        uses: actions/checkout@v4
+
       - name: Download pkg build artifacts
         uses: actions/download-artifact@v4
         with:
