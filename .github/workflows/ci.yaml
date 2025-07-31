@@ -119,7 +119,7 @@ jobs:
     strategy:
       matrix:
         include: ${{ fromJson(needs.buildPackages.outputs.matrix) }}
-    name: Push pkgs: ${{ matrix.codename }} ${{ matrix.architecture }}
+    name: Push pkgs ${{ matrix.codename }} ${{ matrix.architecture }}
     env:
       VERSION_ARCH: ${{ needs.buildPackages.outputs.pkg_ver }}_${{ matrix.architecture }}
 
