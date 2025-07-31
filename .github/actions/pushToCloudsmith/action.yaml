@@ -1,0 +1,34 @@
+name: Push file to Cloudsmith repo
+
+inputs:
+  cloudsmithOwner:
+    description:  Cloudsmith repo owner
+  cloudsmithRepo:
+    description:  Cloudsmith repo name
+  cloudsmithAPIKey:
+    description:  Secret Cloudsmith API key for owner
+  vendor:
+    description:  OS vendor
+    required: true
+  codename:
+    description:  OS distro codename
+    required: true
+  fileName:
+    description:  Name of file to push
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - name: Push ${{ inputs.fileName }} to Cloudsmith
+    uses: cloudsmith-io/action@master
+    with:
+      api-key: ${{ inputs.cloudsmithAPIKey }}
+      command: "push"
+      format: "deb"
+      owner: ${{ inputs.cloudsmithOwner }}
+      repo: ${{ inputs.cloudsmithRepo }}
+      distro: ${{ inputs.vendor }}
+      release: ${{ inputs.codename }}
+      republish: "true"
+      file: ${{ inputs.fileName }}
