@@ -182,6 +182,6 @@ jobs:
           WHERE+=/${{ matrix.vendor }}/${{ matrix.codename }}
           bin/cloudsmith push deb \
               $WHERE \
-              linuxcnc-ethercat-${{ env.VERSION }}.${{ matrix.architecture }}.src \
+              linuxcnc-ethercat_${{ env.VERSION_ARCH }}.deb \
               --sources-file linuxcnc-ethercat_${{ env.VERSION }}.tar.xz \
               --republish
