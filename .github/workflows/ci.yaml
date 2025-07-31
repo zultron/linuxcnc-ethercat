@@ -74,8 +74,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+      - name: Cache .ccache directory
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ${{ matrix.codename }}-${{ matrix.architecture }}
 
       - name: Build packages
         id: build_packages
@@ -162,15 +165,18 @@ jobs:
 
       - uses: ./.github/actions/pushToCloudsmith
         with:
-          vars:  ${{ env.CLOUDSMITH_VARS }}
+          vars: |
+            ${{ env.CLOUDSMITH_VARS }}
           fileName: linuxcnc-ethercat_${{ env.VERSION_ARCH }}.deb
 
       - uses: ./.github/actions/pushToCloudsmith
         with:
-          vars:  ${{ env.CLOUDSMITH_VARS }}
+          vars: |
+            ${{ env.CLOUDSMITH_VARS }}
           fileName: linuxcnc-ethercat-dbgsym_${{ env.VERSION_ARCH }}.ddeb
 
       - uses: ./.github/actions/pushToCloudsmith
         with:
-          vars:  ${{ env.CLOUDSMITH_VARS }}
+          vars: |
+            ${{ env.CLOUDSMITH_VARS }}
           fileName: linuxcnc-ethercat_${{ env.VERSION_ARCH }}.tar.xz
