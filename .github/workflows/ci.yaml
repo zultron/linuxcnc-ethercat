@@ -182,6 +182,8 @@ jobs:
           fileName: linuxcnc-ethercat-dbgsym_${{ env.VERSION_ARCH }}.ddeb
 
       - name:  Push source file
+        env:
+          CLOUDSMITH_API_KEY=${{ secrets.CLOUDSMITH_API_KEY }}
         run: |
           WHERE=${{ vars.CLOUDSMITH_OWNER }}/${{ vars.CLOUDSMITH_REPO }}
           WHERE+=/${{ matrix.vendor }}/${{ matrix.codename }}
