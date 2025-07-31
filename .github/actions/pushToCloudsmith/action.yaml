@@ -1,11 +1,8 @@
 name: Push file to Cloudsmith repo
 
 inputs:
-  vendor:
-    description:  OS vendor
-    required: true
-  codename:
-    description:  OS distro codename
+  vars:
+    description:  JSON dict with needed vars
     required: true
   fileName:
     description:  Name of file to push
@@ -17,12 +14,12 @@ runs:
   - name: Push ${{ inputs.fileName }} to Cloudsmith
     uses: cloudsmith-io/action@master
     with:
-      api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+      api-key: ${{ fromJson(inputs.vars).api_key }}
       command: "push"
       format: "deb"
-      owner: ${{ vars.CLOUDSMITH_OWNER }}
-      repo: ${{ vars.CLOUDSMITH_REPO }}
-      distro: ${{ inputs.vendor }}
-      release: ${{ inputs.codename }}
+      owner: ${{ fromJson(inputs.vars).owner }}
+      repo: ${{ fromJson(inputs.vars).repo }}
+      distro: ${{ fromJson(inputs.vars).vendor }}
+      release: ${{ fromJson(inputs.vars).codename }}
       republish: "true"
       file: ${{ inputs.fileName }}
