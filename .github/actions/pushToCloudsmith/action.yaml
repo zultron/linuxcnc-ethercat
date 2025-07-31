@@ -7,6 +7,9 @@ inputs:
   fileName:
     description:  Name of file to push
     required: true
+  extra:
+    description:  Extra args to cloudsmith CLI
+    default: none
 
 runs:
   using: composite
@@ -23,3 +26,4 @@ runs:
       release: ${{ fromJson(inputs.vars)['codename'] }}
       republish: "true"
       file: ${{ inputs.fileName }}
+      extra: ${{ inputs.extra }}
