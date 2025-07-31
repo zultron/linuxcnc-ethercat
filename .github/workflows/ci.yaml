@@ -89,14 +89,19 @@ jobs:
         run: |
           set -e
 
+          echo ::group::Docker image pull
+          # Show Docker images
+          docker image ls
+          # Be sure docker image is pulled
+          docker run -it --rm $DOCKER_TAG true
+          echo ::endgroup::
+
           PKG_VER="$(dpkg-parsechangelog -S version | sed 's/^[0-9]*://')"
           echo "::set-output name=pkg_ver::$PKG_VER"
           echo "Package version:  $PKG_VER"
           PKG_VER_ARCH="${PKG_VER}_${ARCHITECTURE}"
           echo "::set-output name=pkg_ver_arch::$PKG_VER_ARCH"
           echo "pkg_ver_arch:  $PKG_VER_ARCH"
-
-          echo ::group::Build debian packages
 
           docker run \
               -v ${HOME}:${HOME} \
@@ -108,13 +113,13 @@ jobs:
               $DOCKER_TAG \
               dpkg-buildpackage -uc -us -a${ARCHITECTURE}
 
+
+          echo ::group::Shuffle artifacts
           mkdir -p pkgs
           ls -l ..
           mv ../linuxcnc-ethercat*${PKG_VER}* pkgs/
-
           echo "Final packages for upload:"
           ls -l pkgs/
-
           echo ::endgroup::
 
       - name: >
