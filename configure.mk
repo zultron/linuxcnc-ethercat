@@ -22,6 +22,7 @@ configure:
 	    echo "EXTRA_CFLAGS += $(EXTRA_CFLAGS)"; \
 	    echo "LCEC_CFLAGS = $(LCEC_FLAGS)"; \
 	    echo "USE_RTLIBM = $(USE_RTLIBM)"; \
+	    echo "EMC2_HOME = $(EMC2_HOME)"; \
 	    echo "BINDIR = $(BINDIR)"; \
 	    echo "DATAROOTDIR = $(DATAROOTDIR)"; \
 	    echo "RUN_IN_PLACE = $(RUN_IN_PLACE)"; \
@@ -30,6 +31,7 @@ configure:
 	    echo "L_HAL = $(L_HAL)"; \
 	    echo "prefix = $(prefix)"; \
 	    echo "BUILD_VERBOSE = $(BUILD_VERBOSE)"; \
+	    echo "MODINC_HAS_EXTRA_LDFLAGS = $(MODINC_HAS_EXTRA_LDFLAGS)"; \
 	} > config.mk.tmp
 
 # include modinc
@@ -37,6 +39,8 @@ MODINC=$(shell $(COMP) --print-modinc)
 ifeq (, $(MODINC))
   $(error Unable to get modinc path)
 endif
+
+MODINC_HAS_EXTRA_LDFLAGS = $(shell fgrep -q EXTRA_LDFLAGS $(MODINC) && echo 'y')
 
 include $(MODINC)
 

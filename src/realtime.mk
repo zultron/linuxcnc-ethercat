@@ -19,7 +19,11 @@ else
 ifeq ($(RUN_IN_PLACE),yes)
 LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR)
 endif
-EXTRA_LDFLAGS += -lethercat
+ifeq ($(MODINC_HAS_EXTRA_LDFLAGS),y)
+  EXTRA_LDFLAGS += -L$(LIBDIR) $(L_HAL) -lethercat -lrt
+else
+  LDFLAGS += $(L_HAL) -lethercat
+endif
 EXTRA_CFLAGS += -Wall $(CFLAGS) $(LCEC_CFLAGS)
 
 module-dir:

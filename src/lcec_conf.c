@@ -34,6 +34,7 @@
 #include "lcec_stmds5k.h"
 #include "lcec_el6900.h"
 #include "lcec_el1918_logic.h"
+#include "lcec_el5002.h"
 #include "lcec_el70x1.h"
 #include "lcec_el7411.h"
 #include "lcec_class_ax5.h"
@@ -121,6 +122,32 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveAX5Params[] = {
   { NULL }
 };
 
+static const LCEC_CONF_MODPARAM_DESC_T slaveEL5002Params[] = {
+  { "ch0DisFrameErr", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_DIS_FRAME_ERR, MODPARAM_TYPE_BIT } ,
+  { "ch0EnPwrFailChk", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_EN_PWR_FAIL_CHK, MODPARAM_TYPE_BIT } ,
+  { "ch0EnInhibitTime", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_EN_INHIBIT_TIME, MODPARAM_TYPE_BIT } ,
+  { "ch0Coding", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_CODING, MODPARAM_TYPE_U32 } ,
+  { "ch0Baudrate", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_BAUDRATE, MODPARAM_TYPE_U32 } ,
+  { "ch0ClkJitComp", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_CLK_JIT_COMP, MODPARAM_TYPE_U32 } ,
+  { "ch0FrameType", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_FRAME_TYPE, MODPARAM_TYPE_U32 } ,
+  { "ch0FrameSize", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_FRAME_SIZE, MODPARAM_TYPE_U32 } ,
+  { "ch0DataLen", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_DATA_LEN, MODPARAM_TYPE_U32 } ,
+  { "ch0MinInhibitTime", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_MIN_INHIBIT_TIME, MODPARAM_TYPE_U32 } ,
+  { "ch0NoClkBursts", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_NO_CLK_BURSTS, MODPARAM_TYPE_U32 } ,
+  { "ch1DisFrameErr", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_DIS_FRAME_ERR, MODPARAM_TYPE_BIT } ,
+  { "ch1EnPwrFailChk", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_EN_PWR_FAIL_CHK, MODPARAM_TYPE_BIT } ,
+  { "ch1EnInhibitTime", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_EN_INHIBIT_TIME, MODPARAM_TYPE_BIT } ,
+  { "ch1Coding", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_CODING, MODPARAM_TYPE_U32 } ,
+  { "ch1Baudrate", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_BAUDRATE, MODPARAM_TYPE_U32 } ,
+  { "ch1ClkJitComp", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_CLK_JIT_COMP, MODPARAM_TYPE_U32 } ,
+  { "ch1FrameType", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_FRAME_TYPE, MODPARAM_TYPE_U32 } ,
+  { "ch1FrameSize", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_FRAME_SIZE, MODPARAM_TYPE_U32 } ,
+  { "ch1DataLen", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_DATA_LEN, MODPARAM_TYPE_U32 } ,
+  { "ch1MinInhibitTime", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_MIN_INHIBIT_TIME, MODPARAM_TYPE_U32 } ,
+  { "ch1NoClkBursts", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_NO_CLK_BURSTS, MODPARAM_TYPE_U32 } ,
+  { NULL }
+};
+
 static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // bus coupler
   { "EK1100", lcecSlaveTypeEK1100, NULL },
@@ -201,6 +228,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // analog in, 4ch, 16 bits
   { "EL3164", lcecSlaveTypeEL3164, NULL },
+  { "EL3204", lcecSlaveTypeEL3204, NULL },
 
   // analog in, 5ch, 16 bits
   { "EL3255", lcecSlaveTypeEL3255, NULL },
@@ -234,8 +262,12 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL4038", lcecSlaveTypeEL4038, NULL },
 
   // encoder inputs
+  { "EL5002", lcecSlaveTypeEL5002, slaveEL5002Params },
+  { "EL5021", lcecSlaveTypeEL5021, NULL },
+  { "EL5032", lcecSlaveTypeEL5032, NULL },
   { "EL5101", lcecSlaveTypeEL5101, NULL },
   { "EL5151", lcecSlaveTypeEL5151, NULL },
+  { "EL5122", lcecSlaveTypeEL5122, NULL },
   { "EL5152", lcecSlaveTypeEL5152, NULL },
 
   // pulse train (stepper) output
