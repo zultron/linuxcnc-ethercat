@@ -9,18 +9,13 @@ jobs:
     name: Generate job matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.read_vars.outputs['matrix'] }}
     steps:
       - name: read-yaml-file
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_vars
         with:
           config: ${{ github.workspace }}/.github/debian-distro-settings.yaml
-
-      - name: Set job matrix
-        id: set-matrix
-        run: |
-          echo '::set-output name=matrix::${{ toJson(steps.read_vars.outputs['matrix']) }}'
 
   buildPackages:
     name: Build ${{ matrix.codename }} ${{ matrix.architecture }}
