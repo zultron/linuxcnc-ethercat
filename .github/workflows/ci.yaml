@@ -164,17 +164,20 @@ jobs:
         run: |
           ls -la
 
-      - uses: ./.github/actions/pushToCloudsmith
+      - name:  Push main package
+        uses: ./.github/actions/pushToCloudsmith
         with:
           vars: ${{ env.CLOUDSMITH_VARS }}
           fileName: linuxcnc-ethercat_${{ env.VERSION_ARCH }}.deb
 
-      - uses: ./.github/actions/pushToCloudsmith
+      - name:  Push debug pkg
+        uses: ./.github/actions/pushToCloudsmith
         with:
           vars: ${{ env.CLOUDSMITH_VARS }}
           fileName: linuxcnc-ethercat-dbgsym_${{ env.VERSION_ARCH }}.ddeb
 
-      - uses: ./.github/actions/pushToCloudsmith
+      - name:  Push source file
+        uses: ./.github/actions/pushToCloudsmith
         with:
           vars: ${{ env.CLOUDSMITH_VARS }}
           fileName: linuxcnc-ethercat_${{ env.VERSION }}.tar.xz
