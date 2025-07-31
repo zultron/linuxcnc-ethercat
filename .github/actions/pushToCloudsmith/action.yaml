@@ -1,0 +1,29 @@
+name: Push file to Cloudsmith repo
+
+inputs:
+  vars:
+    description:  JSON dict with needed vars
+    required: true
+  fileName:
+    description:  Name of file to push
+    required: true
+  extra:
+    description:  Extra args to cloudsmith CLI
+    default: none
+
+runs:
+  using: composite
+  steps:
+  - name: Push ${{ inputs.fileName }} to Cloudsmith
+    uses: cloudsmith-io/action@master
+    with:
+      api-key: ${{ fromJson(inputs.vars)['api_key'] }}
+      command: "push"
+      format: "deb"
+      owner: ${{ fromJson(inputs.vars)['owner'] }}
+      repo: ${{ fromJson(inputs.vars)['repo'] }}
+      distro: ${{ fromJson(inputs.vars)['vendor'] }}
+      release: ${{ fromJson(inputs.vars)['codename'] }}
+      republish: "true"
+      file: ${{ inputs.fileName }}
+      extra: ${{ inputs.extra }}

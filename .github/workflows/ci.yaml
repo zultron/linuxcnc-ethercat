@@ -3,88 +3,102 @@ name: cloudsmith.io packages
 on:
   - push
   - pull_request
+
 jobs:
   setup:
-    name:  Set up reusable job matrix
+    name: Generate job matrix
     runs-on: ubuntu-latest
     outputs:
-      MainMatrix: ${{ steps.setup.outputs.MainMatrix }}
-
+      matrix: ${{ steps.read_vars.outputs.content }}
     steps:
+
       - name: Clone git repository
         uses: actions/checkout@v4
 
-      - name: Set up run
-        id: setup
-        uses: ./.github/actions/setupJob
+      - name: Read matrix
+        id: read_vars
+        uses: pixelfederation/gh-action-yaml-to-json@v0.2.0
         with:
-          CloudsmithAPIKey: ${{ secrets.CLOUDSMITH_API_KEY }}
+          directory: .github
+          file: debian-distro-settings.yaml
+
+      - name:  Debug matrix
+        run: |
+          echo "matrix json string:"
+          echo "${{ steps.read_vars.outputs.content }}"
 
   buildPackages:
-    name: ${{ matrix.vendor }} ${{ matrix.codename }} ${{ matrix.architecture }}
+    name: Build ${{ matrix.codename }} ${{ matrix.architecture }}
     runs-on: ubuntu-latest
     needs:  setup
     strategy:
-      matrix: ${{ fromJson(needs.setup.outputs.MainMatrix) }}
+      matrix:
+        include: ${{ fromJson(needs.setup.outputs.matrix) }}
+    outputs:
+      pkg_ver: ${{ steps.build_packages.outputs.pkg_ver }}
+      matrix: ${{ needs.setup.outputs.matrix }}
 
     steps:
 
       - name: Clone git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
           buildkitd-flags: --debug
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
-          tags: |
-            ghcr.io/${{ github.repository }}:${{ matrix.codename }}.${{ matrix.architecture }}
+          tags: ghcr.io/${{ github.repository }}:${{ matrix.codename }}
           push: true
           build-args: |
-            DEBIAN_DISTRO_BASE=${{ matrix.baseImage }}
+            DEBIAN_DISTRO_BASE=${{ matrix.vendor }}:${{ matrix.codename }}
             ARCHITECTURE=${{ matrix.architecture }}
             ENTRYPOINT=/usr/bin/entrypoint
             DEBIAN_DIR=debian
           labels: |
             os_vendor=${{ matrix.vendor }}
             os_codename=${{ matrix.codename }}
-            os_release=${{ matrix.release }}
             os_architecture=${{ matrix.architecture }}
           file: .github/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.codename }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.codename }}
 
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+      - name: Cache .ccache directory
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ${{ matrix.codename }}-${{ matrix.architecture }}
 
       - name: Build packages
         id: build_packages
         shell: bash
         env:
           ARCHITECTURE: ${{ matrix.architecture }}
-          DOCKER_TAG: ghcr.io/${{ github.repository }}:${{ matrix.codename }}.${{
-            matrix.architecture }}
+          DOCKER_TAG: ghcr.io/${{ github.repository }}:${{ matrix.codename }}
         run: |
           set -e
 
-          PKG_VER="$(dpkg-parsechangelog -S version | sed 's/^[0-9]*://')"
-          echo "PKG_VER=${PKG_VER}" >> $GITHUB_ENV
-          PKG_VER_ARCH=${PKG_VER}_${ARCHITECTURE}
-          echo "PKG_VER_ARCH=${PKG_VER_ARCH}" >> $GITHUB_ENV
-          echo "Package version:  $PKG_VER"
+          echo ::group::Docker image pull
+          docker pull $DOCKER_TAG
+          echo ::endgroup::
 
-          echo ::group::Build debian packages
+          PKG_VER="$(dpkg-parsechangelog -S version | sed 's/^[0-9]*://')"
+          echo "::set-output name=pkg_ver::$PKG_VER"
+          echo "Package version:  $PKG_VER"
+          PKG_VER_ARCH="${PKG_VER}_${ARCHITECTURE}"
+          echo "::set-output name=pkg_ver_arch::$PKG_VER_ARCH"
+          echo "pkg_ver_arch:  $PKG_VER_ARCH"
 
           docker run \
               -v ${HOME}:${HOME} \
@@ -96,51 +110,73 @@ jobs:
               $DOCKER_TAG \
               dpkg-buildpackage -uc -us -a${ARCHITECTURE}
 
-          echo ::endgroup::
 
-      - name: Ready packages for upload
-        shell: bash
-        run: |
-          set -e
-          echo ::group::Preparing build artifacts for upload
-
+          echo ::group::Shuffle artifacts
           mkdir -p pkgs
           ls -l ..
-          mv ../*${PKG_VER}* pkgs/
-
+          mv ../linuxcnc-ethercat*${PKG_VER}* pkgs/
           echo "Final packages for upload:"
           ls -l pkgs/
-
           echo ::endgroup::
 
       - name: >
           Artifacts ${{ matrix.codename}} ${{ matrix.architecture }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         env:
           NAME_BASE: ${{ matrix.codename }}-${{ env.PKG_VER_ARCH }}
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_REPO: ${{ github.event.repository.name }}
         with:
-          name: ${{ env.NAME_BASE }}-${{ env.GITHUB_SHA }}
+          name: pkgs_${{ matrix.codename }}-${{ matrix.architecture }}
           path: pkgs
           if-no-files-found: error
 
   pushPackages:
     needs: buildPackages
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{ fromJson(needs.buildPackages.outputs.matrix) }}
+    name: Push pkgs ${{ matrix.codename }} ${{ matrix.architecture }}
+    env:
+      VERSION: ${{ needs.buildPackages.outputs.pkg_ver }}
+      VERSION_ARCH: >-
+        ${{ needs.buildPackages.outputs.pkg_ver }}_${{ matrix.architecture }}
+      CLOUDSMITH_VARS: |
+        {
+          "api_key" : "${{ secrets.CLOUDSMITH_API_KEY }}",
+          "owner" : "${{ vars.CLOUDSMITH_OWNER }}",
+          "repo": "${{ vars.CLOUDSMITH_REPO }}",
+          "vendor": "${{ matrix.vendor }}",
+          "codename": "${{ matrix.codename }}"
+        }
 
     steps:
+
       - name: Clone git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Download built packages from build artifacts
-        uses: actions/download-artifact@v3
+      - name: Download pkg build artifacts
+        uses: actions/download-artifact@v4
         with:
-          path: ./pkgs
+          name: pkgs_${{ matrix.codename }}-${{ matrix.architecture }}
+          path: .
 
-      - name: Upload packages to Cloudsmith
-        uses: ./.github/actions/pushCloudsmith
+      - name:  Push main package
+        uses: ./.github/actions/pushToCloudsmith
         with:
-          cloudsmithAPIKey: ${{ secrets.CLOUDSMITH_API_KEY }}
-          cloudsmithNamespace:  ${{ secrets.CLOUDSMITH_NAMESPACE }}
-          artifactDirectory: ./pkgs
+          vars: ${{ env.CLOUDSMITH_VARS }}
+          fileName: linuxcnc-ethercat_${{ env.VERSION_ARCH }}.deb
+
+      - name:  Push debug pkg
+        uses: ./.github/actions/pushToCloudsmith
+        with:
+          vars: ${{ env.CLOUDSMITH_VARS }}
+          fileName: linuxcnc-ethercat-dbgsym_${{ env.VERSION_ARCH }}.ddeb
+
+      - name:  Push source pkg
+        uses: ./.github/actions/pushToCloudsmith
+        with:
+          vars: ${{ env.CLOUDSMITH_VARS }}
+          fileName: linuxcnc-ethercat_${{ env.VERSION }}.dsc
+          extra: --sources-file linuxcnc-ethercat_${{ env.VERSION }}.tar.xz
