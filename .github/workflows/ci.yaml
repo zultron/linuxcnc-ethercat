@@ -11,6 +11,15 @@ jobs:
     outputs:
       matrix: ${{ steps.read_vars.outputs['matrix'] }}
     steps:
+      - name: debug
+        run: |
+          set -x
+          pwd
+          ls -l
+          ls -l .github
+          echo ${{ github.workspace }}
+          ls -l ${{ github.workspace }}
+          ls -l ${{ github.workspace }}/.github
       - name: read-yaml-file
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_vars
