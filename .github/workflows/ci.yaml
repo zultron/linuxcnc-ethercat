@@ -71,8 +71,8 @@ jobs:
             os_codename=${{ matrix.codename }}
             os_architecture=${{ matrix.architecture }}
           file: .github/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.codename }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.codename }}
 
       - name: Cache .ccache directory
         uses: actions/cache@v4
