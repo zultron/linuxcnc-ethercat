@@ -14,12 +14,12 @@ runs:
   - name: Push ${{ inputs.fileName }} to Cloudsmith
     uses: cloudsmith-io/action@master
     with:
-      api-key: ${{ fromJson(inputs.vars).api_key }}
+      api-key: ${{ fromJson(inputs.vars)['api_key'] }}
       command: "push"
       format: "deb"
-      owner: ${{ fromJson(inputs.vars).owner }}
-      repo: ${{ fromJson(inputs.vars).repo }}
-      distro: ${{ fromJson(inputs.vars).vendor }}
-      release: ${{ fromJson(inputs.vars).codename }}
+      owner: ${{ fromJson(inputs.vars)['owner'] }}
+      repo: ${{ fromJson(inputs.vars)['repo'] }}
+      distro: ${{ fromJson(inputs.vars)['vendor'] }}
+      release: ${{ fromJson(inputs.vars)['codename'] }}
       republish: "true"
       file: ${{ inputs.fileName }}
