@@ -1,12 +1,6 @@
 name: Push file to Cloudsmith repo
 
 inputs:
-  cloudsmithOwner:
-    description:  Cloudsmith repo owner
-  cloudsmithRepo:
-    description:  Cloudsmith repo name
-  cloudsmithAPIKey:
-    description:  Secret Cloudsmith API key for owner
   vendor:
     description:  OS vendor
     required: true
@@ -23,11 +17,11 @@ runs:
   - name: Push ${{ inputs.fileName }} to Cloudsmith
     uses: cloudsmith-io/action@master
     with:
-      api-key: ${{ inputs.cloudsmithAPIKey }}
+      api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
       command: "push"
       format: "deb"
-      owner: ${{ inputs.cloudsmithOwner }}
-      repo: ${{ inputs.cloudsmithRepo }}
+      owner: ${{ vars.CLOUDSMITH_OWNER }}
+      repo: ${{ vars.CLOUDSMITH_REPO }}
       distro: ${{ inputs.vendor }}
       release: ${{ inputs.codename }}
       republish: "true"
