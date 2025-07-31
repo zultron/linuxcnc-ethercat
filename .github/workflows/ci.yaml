@@ -22,6 +22,11 @@ jobs:
           directory: .github
           file: debian-distro-settings.yaml
 
+      - name:  Debug matrix
+        run: |
+          echo "matrix json string:"
+          echo "${{ steps.read_vars.outputs.content }}"
+
   buildPackages:
     name: Build ${{ matrix.codename }} ${{ matrix.architecture }}
     runs-on: ubuntu-latest
