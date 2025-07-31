@@ -143,6 +143,10 @@ jobs:
           name: pkgs_${{ matrix.codename }}-${{ matrix.architecture }}
           path: .
 
+      - name: Debug artifacts
+        run: |
+          ls -la
+
       - uses: ./.github/actions/pushToCloudsmith
         with:
           vendor: ${{ matrix.vendor }}
