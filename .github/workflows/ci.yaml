@@ -9,17 +9,18 @@ jobs:
     name: Generate job matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.read_vars.outputs['matrix'] }}
+      matrix: ${{ steps.read_vars.outputs.content }}
     steps:
 
       - name: Clone git repository
         uses: actions/checkout@v4
 
-      - name: read-yaml-file
-        uses: nichmor/minimal-read-yaml@v0.0.2
+      - name: Read matrix
         id: read_vars
+        uses: pixelfederation/gh-action-yaml-to-json@v0.2.0
         with:
-          config: .github/debian-distro-settings.yaml
+          directory: .github
+          file: debian-distro-settings.yaml
 
   buildPackages:
     name: Build ${{ matrix.codename }} ${{ matrix.architecture }}
