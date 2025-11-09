@@ -290,6 +290,8 @@ static const lcec_pindesc_t master_pins[] = {
   { HAL_S32, HAL_OUT, offsetof(lcec_master_data_t, pll_out), "%s.pll-out" },
   { HAL_U32, HAL_OUT, offsetof(lcec_master_data_t, pll_reset_cnt), "%s.pll-reset-count" },
 #endif
+  { HAL_BIT, HAL_IN, offsetof(lcec_master_data_t, deactivate), "%s.deactivate" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, deactivated), "%s.deactivated" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -1462,8 +1464,8 @@ void lcec_write_master(void *arg, long period) {
   long long ref;
   uint32_t dc_time;
   int dc_time_valid;
-  lcec_master_data_t *hal_data;
 #endif
+  lcec_master_data_t *hal_data = master->hal_data;
 
   // process slaves
   for (slave = master->first_slave; slave != NULL; slave = slave->next) {
@@ -1479,6 +1481,10 @@ void lcec_write_master(void *arg, long period) {
 
   // send process data
   rtapi_mutex_get(&master->mutex);
+  if (*(hal_data->deactivate) && !*(hal_data->deactivated)) {
+    ecrt_master_deactivate_slaves(master->master);
+    *(hal_data->deactivated) = 1;
+  }
   ecrt_domain_queue(master->domain);
 
   // update application time
@@ -1526,7 +1532,6 @@ void lcec_write_master(void *arg, long period) {
 #ifdef RTAPI_TASK_PLL_SUPPORT
   // BANG-BANG controller for master thread PLL sync
   // this part is done after ecrt_master_send() to reduce jitter
-  hal_data = master->hal_data;
   *(hal_data->pll_err) = 0;
   *(hal_data->pll_out) = 0;
   // the first read dc_time value semms to be invalid, so wait for two successive succesfull reads

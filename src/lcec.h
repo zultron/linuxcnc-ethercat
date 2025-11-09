@@ -114,6 +114,8 @@ typedef struct lcec_master_data {
   hal_u32_t pll_max_err;
   hal_u32_t *pll_reset_cnt;
 #endif
+  hal_bit_t *deactivate;
+  hal_bit_t *deactivated;
 } lcec_master_data_t;
 
 typedef struct lcec_slave_state {
