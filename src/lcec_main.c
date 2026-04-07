@@ -522,13 +522,13 @@ int rtapi_app_main(void) {
             " dir %s, watchdog mode %s\n",
             master->name, slave->name, smconf->index, smconf->n_pdos,
             sm_dirs[smconf->dir], wd_modes[smconf->watchdog_mode]);
-          for (ec_pdo_info_t *pdo = smconf->pdos;
+          for (const ec_pdo_info_t *pdo = smconf->pdos;
                pdo < smconf->pdos + smconf->n_pdos; pdo++) {
             rtapi_print_msg(
               RTAPI_MSG_DBG,
               LCEC_MSG_PFX "Slave %s.%s:    PDO mapping %04Xh, %d entries\n",
               master->name, slave->name, pdo->index, pdo->n_entries);
-            for (ec_pdo_entry_info_t *entry = pdo->entries;
+            for (const ec_pdo_entry_info_t *entry = pdo->entries;
                  entry < pdo->entries + pdo->n_entries; entry++)
               rtapi_print_msg (
                 RTAPI_MSG_DBG,
