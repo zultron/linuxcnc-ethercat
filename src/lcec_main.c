@@ -816,6 +816,7 @@ int lcec_parse_config(void) {
 
         // add slave to list
         LCEC_LIST_APPEND(master->first_slave, master->last_slave, slave);
+        master->slave_count++;
 
         if (type != NULL) {
           // normal slave
@@ -1514,8 +1515,12 @@ void lcec_write_master(void *arg, long period) {
 #ifdef RTAPI_TASK_PLL_SUPPORT
   // sync master to ref clock
   dc_time = 0;
-  if (master->sync_ref_cycles < 0) {
-    // get reference clock time to synchronize master cycle
+  if (master->sync_ref_cycles < 0 && master->ms.link_up &&
+      master->ms.slaves_responding >= master->slave_count) {
+    // get reference clock time to synchronize master cycle; skipped while
+    // configured slaves are missing (e.g. drives powered off), where there
+    // may be no DC reference clock and the call fails (and IgH >= 1.6 logs
+    // the failure) every cycle
     dc_time_valid = (ecrt_master_reference_clock_time(master->master, &dc_time) == 0);
   } else {
     dc_time_valid = 0;

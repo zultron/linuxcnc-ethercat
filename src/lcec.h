@@ -141,6 +141,7 @@ typedef struct lcec_master {
   int process_data_len;
   struct lcec_slave *first_slave;
   struct lcec_slave *last_slave;
+  int slave_count;
   lcec_master_data_t *hal_data;
   uint64_t app_time_base;
   uint32_t app_time_period;
